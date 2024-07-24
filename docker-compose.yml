@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  dbcredits:
+    image: mysql:8.0-bookworm
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dbcredits
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+      

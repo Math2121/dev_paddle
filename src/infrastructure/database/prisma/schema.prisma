@@ -1,0 +1,95 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PRISMA")
+}
+
+model Customer {
+  id        String  @id
+  name      String?
+  email     String  @unique
+  status    String
+  paddle_id String  @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("customer")
+}
+
+model Loggers {
+  id String @id @default(uuid())
+
+  message String
+
+  level String
+
+  createdAt DateTime @default(now())
+
+  @@map("loggers")
+}
+
+model Subscription {
+  id          String   @id
+  customer_id String   @unique
+  paddle_id   String   @unique
+  price_id    String?
+  product_id  String?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("subscription")
+}
+
+model Product {
+  id        String @id
+  name      String
+  status    String
+  paddle_id String @unique
+
+  @@map("product")
+}
+
+model Price {
+  id            String @id
+  amount        String
+  name          String @default("")
+  currency_code String
+  status        String @default("active")
+  paddle_id     String @unique @default("")
+  product_id    String @default("")
+  custom_data   String @default("")
+
+  @@map("price")
+}
+
+model HistoryCredit {
+  id           String   @id @default(uuid())
+  userId       String
+  invoiceId    String
+  creditAmount Float
+  renewAt      String
+  expirationAt String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("history_credit")
+}
+
+model Payment {
+  id              String  @id @default(uuid())
+  customer_id     String
+  subscription_id String
+  type            String
+  last4           String?
+  card_name       String?
+  card_brand      String?
+  paddle_id       String
+
+  @@map("payment")
+}
